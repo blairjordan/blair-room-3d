@@ -29,7 +29,7 @@ export default function Page() {
           <View orbit className='relative h-full w-full'>
             <Suspense fallback={null}>
               <Office scale={2} position={[0, -1.6, 0]} rotation={[0.0, -0.3, 0]} />
-              <Common color={'#cccccc'} />
+              <Common color={'#111111'} />
             </Suspense>
           </View>
         </div>

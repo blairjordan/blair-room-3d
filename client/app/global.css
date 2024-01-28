@@ -17,3 +17,7 @@
     overflow: hidden;
   }
 }
+
+body {
+  background-color: #111111;
+}

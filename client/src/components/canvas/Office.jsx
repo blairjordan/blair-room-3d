@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { useContext } from 'react'
 import { useGLTF } from '@react-three/drei'
+import { useThree } from '@react-three/fiber'
 import { Screens } from './Screens'
 import { Nanoleaf } from './Nanoleaf'
 import { Piano } from './Piano'
@@ -10,10 +11,11 @@ export function Office(props) {
 
   return (
     <>
-      <primitive object={scene} {...props} />
-      <Screens scene={scene} />
-      <Nanoleaf scene={scene} />
-      <Piano scene={scene} />
+      <primitive object={scene} {...props}>
+        <Screens scene={scene} />
+        <Nanoleaf scene={scene} />
+        <Piano scene={scene} />
+      </primitive>
     </>
   )
 }
