@@ -2,6 +2,11 @@ import React, { useState, useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { useThree, useFrame } from '@react-three/fiber'
 
+const BLACK_KEYS = [
+  22, 25, 27, 30, 32, 34, 37, 39, 42, 44, 46, 49, 51, 54, 56, 58, 61, 63, 66, 68, 70, 73, 75, 78, 80, 82, 85, 87, 90,
+  92, 94, 97, 99, 102, 104, 106,
+]
+
 export function Piano({ scene }) {
   const audioLoader = useRef(new THREE.AudioLoader())
   const listener = useRef(new THREE.AudioListener())
@@ -9,28 +14,35 @@ export function Piano({ scene }) {
 
   const originalPositions = useRef(new Map())
   const [pressedKey, setPressedKey] = useState(null)
+  const [isDebouncing, setIsDebouncing] = useState(false)
 
-  const handleKeyDown = (keyMesh) => {
+  const handleKeyDown = (event, keyMesh) => {
+    event.stopPropagation()
+    if (isDebouncing) {
+      return
+    }
+    setIsDebouncing(true)
+
     if (!originalPositions.current.has(keyMesh)) {
       originalPositions.current.set(keyMesh, keyMesh.position.clone())
     }
     setPressedKey(keyMesh)
     playSound(keyMesh.name)
+
+    setTimeout(() => {
+      setIsDebouncing(false)
+    }, 100)
   }
 
   const handleKeyUp = () => {
     setPressedKey(null)
   }
+
   useFrame(() => {
     keyMeshes.forEach((keyMesh) => {
       const originalPosition = originalPositions.current.get(keyMesh)
       if (keyMesh === pressedKey) {
-        const blackKeys = [
-          22, 25, 27, 30, 32, 34, 37, 39, 42, 44, 46, 49, 51, 54, 56, 58, 61, 63, 66, 68, 70, 73, 75, 78, 80, 82, 85,
-          87, 90, 92, 94, 97, 99, 102, 104, 106,
-        ]
-
-        const downLength = blackKeys.includes(Number(keyMesh.name.replace('piano_key_', ''))) ? 0.01 : 0.02
+        const downLength = BLACK_KEYS.includes(Number(keyMesh.name.replace('piano_key_', ''))) ? 0.01 : 0.02
 
         const downPosition = originalPosition.y - downLength
         keyMesh.position.y = Math.max(keyMesh.position.y - 0.005, downPosition)
@@ -71,7 +83,7 @@ export function Piano({ scene }) {
         return (
           <mesh
             key={`${keyMesh.name}_event`}
-            onPointerDown={() => handleKeyDown(keyMesh)}
+            onPointerDown={(event) => handleKeyDown(event, keyMesh)}
             onPointerUp={handleKeyUp}
             geometry={keyMesh.geometry}
             position={keyMesh.position}
