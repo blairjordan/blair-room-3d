@@ -7,10 +7,14 @@ const BLACK_KEYS = [
   92, 94, 97, 99, 102, 104, 106,
 ]
 
+const AUDIO_FILES = new Array(88).fill().map((_, i) => `piano/key_${i + 21}.mp3`)
+
+console.log(AUDIO_FILES)
 export function Piano({ scene }) {
   const audioLoader = useRef(new THREE.AudioLoader())
   const listener = useRef(new THREE.AudioListener())
   const sound = useRef(new THREE.Audio(listener.current))
+  const audioBuffers = useRef(new Map())
 
   const originalPositions = useRef(new Map())
   const [pressedKey, setPressedKey] = useState(null)
@@ -38,6 +42,21 @@ export function Piano({ scene }) {
     setPressedKey(null)
   }
 
+  useEffect(() => {
+    AUDIO_FILES.forEach((fileName) => {
+      audioLoader.current.load(
+        fileName,
+        (buffer) => {
+          audioBuffers.current.set(fileName, buffer)
+        },
+        undefined,
+        (error) => {
+          console.error('An error occurred while preloading the audio:', error)
+        },
+      )
+    })
+  }, [])
+
   useFrame(() => {
     keyMeshes.forEach((keyMesh) => {
       const originalPosition = originalPositions.current.get(keyMesh)
@@ -60,19 +79,15 @@ export function Piano({ scene }) {
     }
 
     console.log('🎵 playing', audioFileName)
-    audioLoader.current.load(
-      audioFileName,
-      (buffer) => {
-        sound.current.setBuffer(buffer)
-        sound.current.setLoop(false)
-        sound.current.setVolume(0.5)
-        sound.current.play()
-      },
-      undefined,
-      (error) => {
-        console.error('An error occurred while loading the audio:', error)
-      },
-    )
+    const buffer = audioBuffers.current.get(audioFileName)
+    if (buffer) {
+      sound.current.setBuffer(buffer)
+      sound.current.setLoop(false)
+      sound.current.setVolume(0.5)
+      sound.current.play()
+    } else {
+      console.error('Audio buffer not found for:', audioFileName)
+    }
   }
 
   const keyMeshes = scene.children.filter((child) => child.name.startsWith('piano_key_'))
