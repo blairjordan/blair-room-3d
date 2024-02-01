@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
 
 const Office = dynamic(() => import('@/components/canvas/Office').then((mod) => mod.Office), { ssr: false })
+const Avatar = dynamic(() => import('@/components/canvas/Avatar').then((mod) => mod.Avatar), { ssr: false })
 const View = dynamic(() => import('@/components/canvas/View').then((mod) => mod.View), {
   ssr: false,
   loading: () => (
@@ -29,6 +30,7 @@ export default function Page() {
           <View orbit className='relative h-full w-full'>
             <Suspense fallback={null}>
               <Office scale={2} position={[0, -1.6, 0]} rotation={[0.0, -0.3, 0]} />
+              <Avatar scale={2.1} position={[0.3, -1.6, -0.1]} rotation={[0.0, 0.5, 0]} />
               <Common color={'#111111'} />
             </Suspense>
           </View>
