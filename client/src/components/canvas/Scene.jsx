@@ -4,7 +4,6 @@ import { Canvas } from '@react-three/fiber'
 import { Preload } from '@react-three/drei'
 import { r3f } from '@/helpers/global'
 import * as THREE from 'three'
-import { Bloom, EffectComposer } from '@react-three/postprocessing'
 
 export default function Scene({ ...props }) {
   // Everything defined in here will persist between route changes, only children are swapped
@@ -13,10 +12,6 @@ export default function Scene({ ...props }) {
       {/* @ts-ignore */}
       <r3f.Out />
       <Preload all />
-
-      <EffectComposer>
-        <Bloom luminanceThreshold={0.3} luminanceSmoothing={0.9} height={300} />
-      </EffectComposer>
     </Canvas>
   )
 }

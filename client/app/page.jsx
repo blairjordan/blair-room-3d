@@ -30,7 +30,7 @@ export default function Page() {
           <View orbit className='relative h-full w-full'>
             <Suspense fallback={null}>
               <Office scale={2} position={[0, -1.6, 0]} rotation={[0.0, -0.3, 0]} />
-              <Avatar scale={2.1} position={[0.3, -1.6, -0.1]} rotation={[0.0, 0.5, 0]} />
+              <Avatar scale={2.25} position={[0.6, -1.6, 0]} rotation={[0.0, 0.7, 0]} />
               <Common color={'#111111'} />
             </Suspense>
           </View>
