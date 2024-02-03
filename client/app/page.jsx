@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
+import { SocketProvider } from '@/components/context/SocketContext'
 import ChatWindow from '@/components/dom/ChatWindow'
 
 const Office = dynamic(() => import('@/components/canvas/Office').then((mod) => mod.Office), { ssr: false })
@@ -34,9 +35,10 @@ export default function Page() {
             <Common color={'#111111'} />
           </Suspense>
         </View>
-        {/* Make ChatWindow an overlay */}
         <div className='absolute bottom-0 right-4 z-10 bg-opacity-25'>
-          <ChatWindow />
+          <SocketProvider>
+            <ChatWindow />
+          </SocketProvider>
         </div>
       </div>
     </div>
