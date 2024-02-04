@@ -8,15 +8,15 @@ export const useChat = (socket, options = {}) => {
 
   useEffect(() => {
     if (socket && onChatUpdate) {
-      socket.on('chatUpdate', onChatUpdate)
+      socket.on('receiveMessage', onChatUpdate)
     }
 
     return () => {
       if (socket && onChatUpdate) {
-        socket.off('chatUpdate', onChatUpdate)
+        socket.off('receiveMessage', onChatUpdate)
       }
     }
-  }, [socket])
+  }, [socket, onChatUpdate])
 
   const sendMessage = (message) => {
     if (socket) {
@@ -24,8 +24,5 @@ export const useChat = (socket, options = {}) => {
     }
   }
 
-  return {
-    socket,
-    sendMessage,
-  }
+  return { sendMessage }
 }

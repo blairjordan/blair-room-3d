@@ -4,83 +4,54 @@ import { SocketContext } from '@/components/context/SocketContext'
 
 export default function ChatWindow() {
   const socket = useContext(SocketContext)
+  const [messages, setMessages] = useState([])
+  const [newMessage, setNewMessage] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
-  const onChatUpdate = useCallback((data) => {
-    // setMessages((prevMessages) => [...prevMessages, data])
-    console.log('Chat update:', data)
+  const onChatUpdate = useCallback((message) => {
+    setMessages((prevMessages) => [...prevMessages, message])
+    if (message.from !== 'you') {
+      setIsLoading(false)
+    }
   }, [])
 
   const { sendMessage } = useChat(socket, { onChatUpdate })
 
-  const [messages, setMessages] = useState([])
-  const [newMessage, setNewMessage] = useState('')
-
   const sendChatMessage = () => {
     if (!newMessage.trim()) return
-    const message = { id: Date.now(), text: newMessage }
+    setIsLoading(true)
+    const message = { id: Date.now(), text: newMessage, from: 'you' }
     sendMessage(message)
-    setMessages((prevMessages) => [...prevMessages, message])
     setNewMessage('')
   }
 
-  const chatContainerStyle = {
-    backgroundColor: 'hsla(0, 0%, 0%, 0.3)',
-    color: 'hsla(0, 0%, 100%, 0.5)',
-    padding: '4px',
-    fontFamily: '"Roboto Mono", "Source Code Pro", Menlo, Courier, monospace', // --bs-ff
-    fontSize: '11px',
-    fontWeight: '500',
-    lineHeight: '1',
-    boxShadow: '0 0 10px hsla(0, 0%, 0%, 0.2)',
-    borderRadius: '6px',
-  }
-
-  const messageInputStyle = {
-    backgroundColor: 'hsla(0, 0%, 0%, 0.3)',
-    color: 'hsla(0, 0%, 100%, 0.5)',
-    borderColor: 'hsla(0, 0%, 0%, 0.2)',
-    borderWidth: '1px',
-    borderStyle: 'solid',
-  }
-
-  const sendMessageButtonStyle = {
-    backgroundColor: 'hsla(0, 0%, 80%, 1)',
-    color: 'hsla(0, 0%, 0%, 0.8)',
-  }
-
   return (
-    <div
-      style={chatContainerStyle}
-      className='fixed bottom-0 right-4 max-w-md rounded-lg shadow-lg flex flex-col z-10 space-y-4'
-    >
+    <div className='fixed bottom-0 right-4 max-w-md rounded-lg shadow-lg flex flex-col z-10 space-y-4 p-4 text-xs bg-custom-bg text-custom-text border border-custom-border font-roboto'>
       <div className='flex-1 overflow-y-auto'>
         {messages.map((message) => (
           <div
             key={message.id}
-            style={{ backgroundColor: 'hsla(0, 0%, 0%, 0.6)', color: 'hsla(0, 0%, 100%, 0.5)' }}
-            className='p-2 rounded-md mb-2'
+            className={`p-2 rounded-md mb-2 ${message.from !== 'you' ? 'bg-custom-bg ml-auto' : 'bg-gray-700 mr-auto'}`}
           >
-            {message.text}
+            {message.from}: <span className={`${message.error ? 'italic' : ''}`}>{message.text || message.error}</span>
           </div>
         ))}
       </div>
-      <div>
-        <input
-          type='text'
-          placeholder='Type your message...'
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          className='w-full p-2 rounded-md focus:outline-none'
-          style={messageInputStyle}
-        />
-        <button
-          onClick={sendChatMessage}
-          className='w-full mt-2 p-2 rounded-md focus:outline-none hover:bg-blue-600'
-          style={sendMessageButtonStyle}
-        >
-          Send
-        </button>
-      </div>
+      <input
+        type='text'
+        placeholder='Type your message...'
+        value={newMessage}
+        onChange={(e) => setNewMessage(e.target.value)}
+        className={`w-full p-2 rounded-md focus:outline-none bg-custom-bg text-custom-text border border-custom-border disabled:bg-gray-600 disabled:text-gray-400`}
+        disabled={isLoading}
+      />
+      <button
+        onClick={sendChatMessage}
+        className={`w-full mt-2 p-2 rounded-md focus:outline-none disabled:cursor-not-allowed ${isLoading ? 'bg-gray-400 text-gray-700' : 'bg-[hsla(0,0%,80%,1)] text-[hsla(0,0%,0%,0.8)]'} hover:bg-gray-400 disabled:bg-gray-300 disabled:text-gray-500`}
+        disabled={isLoading}
+      >
+        {isLoading ? 'Waiting for reply...' : 'Send'}
+      </button>
     </div>
   )
 }
