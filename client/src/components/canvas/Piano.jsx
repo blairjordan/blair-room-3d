@@ -9,7 +9,6 @@ const BLACK_KEYS = [
 
 const AUDIO_FILES = new Array(88).fill().map((_, i) => `piano/key_${i + 21}.mp3`)
 
-console.log(AUDIO_FILES)
 export function Piano({ scene }) {
   const audioLoader = useRef(new THREE.AudioLoader())
   const listener = useRef(new THREE.AudioListener())

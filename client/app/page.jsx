@@ -2,6 +2,8 @@
 
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
+import { SocketProvider } from '@/components/context/SocketContext'
+import ChatWindow from '@/components/dom/ChatWindow'
 
 const Office = dynamic(() => import('@/components/canvas/Office').then((mod) => mod.Office), { ssr: false })
 const Avatar = dynamic(() => import('@/components/canvas/Avatar').then((mod) => mod.Avatar), { ssr: false })
@@ -24,18 +26,21 @@ const Common = dynamic(() => import('@/components/canvas/View').then((mod) => mo
 
 export default function Page() {
   return (
-    <>
-      <div className='mx-auto flex w-full flex-col flex-wrap items-center p-12 md:flex-row lg:w-full'>
-        <div className='relative my-12 h-screen w-full py-6'>
-          <View orbit className='relative h-full w-full'>
-            <Suspense fallback={null}>
-              <Office scale={2} position={[0, -1.6, 0]} rotation={[0.0, -0.3, 0]} />
-              <Avatar scale={2.25} position={[0.6, -1.6, 0]} rotation={[0.0, 0.7, 0]} />
-              <Common color={'#111111'} />
-            </Suspense>
-          </View>
+    <div className='mx-auto flex w-full flex-col flex-wrap items-center p-12 md:flex-row lg:w-full relative'>
+      <div className='relative my-12 h-screen w-full py-6'>
+        <View orbit className='relative h-full w-full'>
+          <Suspense fallback={null}>
+            <Office scale={2} position={[0, -1.6, 0]} rotation={[0.0, -0.3, 0]} />
+            <Avatar scale={2.25} position={[0.6, -1.6, 0]} rotation={[0.0, 0.7, 0]} />
+            <Common color={'#111111'} />
+          </Suspense>
+        </View>
+        <div className='absolute bottom-0 right-4 z-10 bg-opacity-25'>
+          <SocketProvider>
+            <ChatWindow />
+          </SocketProvider>
         </div>
       </div>
-    </>
+    </div>
   )
 }
