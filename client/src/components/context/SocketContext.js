@@ -3,7 +3,7 @@
 import React, { createContext, useState, useEffect } from 'react'
 import io from 'socket.io-client'
 
-const SOCKET_SERVER_URL = 'http://localhost:8080'
+const SOCKET_SERVER_URL = process.env.NEXT_PUBLIC_SOCKET_SERVER_URL
 
 export const SocketContext = createContext(null)
 
