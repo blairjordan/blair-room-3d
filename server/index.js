@@ -28,14 +28,14 @@ app.get("/healthz", (req, res) => {
 })
 
 io.on("connection", (socket) => {
-  console.log("A user connected")
+  console.log("🔌 User connected")
   const assistantThread = new AssistantThread(
     process.env.OPEANAI_API_KEY,
     process.env.OPEANAI_ASSISTANT_ID
   )
 
   socket.on("disconnect", () => {
-    console.log("User disconnected")
+    console.log("🛑 User disconnected")
   })
 
   socket.on("sendMessage", async (message) => {
