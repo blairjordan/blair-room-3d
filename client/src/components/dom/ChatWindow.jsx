@@ -26,7 +26,6 @@ export default function ChatWindow() {
   }
 
   const handleKeyDown = (e) => {
-    console.log('ok')
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       sendChatMessage()
