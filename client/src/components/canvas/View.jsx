@@ -9,7 +9,6 @@ export const Common = ({ color }) => (
     {color && <color attach='background' args={[color]} />}
     <ambientLight intensity={0.5} />
     <pointLight position={[20, 30, 10]} intensity={3} decay={0.2} />
-    <pointLight position={[-10, -10, -10]} color='blue' decay={0.5} />
     <SpotLight position={[0, 5, 0]} angle={1.5} intensity={1.5} />
     <PerspectiveCamera makeDefault fov={10} position={[20, 25, 50]} near={0.1} far={150} />
   </Suspense>
