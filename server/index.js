@@ -2,6 +2,8 @@ import express from "express"
 import http from "http"
 import cors from "cors"
 import dotenv from "dotenv"
+import { convertTextToAudio } from "./util/textToSpeech.js"
+
 dotenv.config()
 
 import { Server } from "socket.io"
@@ -17,6 +19,8 @@ const io = new Server(server, {
   },
 })
 
+app.use(express.static("public"))
+
 app.get("/healthz", (req, res) => {
   res.send({
     status: "ok",
@@ -26,8 +30,8 @@ app.get("/healthz", (req, res) => {
 io.on("connection", (socket) => {
   console.log("A user connected")
   const assistantThread = new AssistantThread(
-    process.env.API_KEY,
-    process.env.ASSISTANT_ID
+    process.env.OPEANAI_API_KEY,
+    process.env.OPEANAI_ASSISTANT_ID
   )
 
   socket.on("disconnect", () => {
@@ -52,12 +56,25 @@ io.on("connection", (socket) => {
     try {
       await assistantThread.ask(message.text)
       const response = await assistantThread.poll()
+
       console.info("⬅️ Response: ", response)
       socket.emit("receiveMessage", {
         id: Date.now(),
         text: response,
         from: process.env.SENDER_FROM,
       })
+
+      if (response) {
+        const audioFile = await convertTextToAudio(response)
+
+        console.info("🔊 Converted text to audio", audioFile)
+
+        socket.emit("receiveMessage", {
+          id: Date.now(),
+          audioFile,
+          from: process.env.SENDER_FROM,
+        })
+      }
     } catch (error) {
       socket.emit("receiveMessage", {
         id: Date.now(),

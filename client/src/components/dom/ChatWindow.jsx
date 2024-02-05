@@ -9,6 +9,12 @@ export default function ChatWindow() {
   const [isLoading, setIsLoading] = useState(false)
 
   const onChatUpdate = useCallback((message) => {
+    if (message?.audioFile) {
+      const audio = new Audio(`${process.env.NEXT_PUBLIC_SERVER_URL}/${message.audioFile}`)
+      audio.play()
+      return
+    }
+
     setMessages((prevMessages) => [...prevMessages, message])
     if (message.from !== 'you') {
       setIsLoading(false)
