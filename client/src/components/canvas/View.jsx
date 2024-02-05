@@ -17,6 +17,8 @@ export const Common = ({ color }) => (
 
 const View = forwardRef(({ children, orbit, ...props }, ref) => {
   const localRef = useRef(null)
+  const orbitRef = useRef(null)
+
   useImperativeHandle(ref, () => localRef.current)
 
   return (
@@ -25,7 +27,15 @@ const View = forwardRef(({ children, orbit, ...props }, ref) => {
       <Three>
         <ViewImpl track={localRef}>
           {children}
-          {orbit && <OrbitControls />}
+          {orbit && (
+            <OrbitControls
+              ref={orbitRef}
+              minAzimuthAngle={-Math.PI / 8}
+              maxAzimuthAngle={Math.PI / 2}
+              minPolarAngle={Math.PI / 4}
+              maxPolarAngle={Math.PI / 2}
+            />
+          )}
         </ViewImpl>
       </Three>
     </>
