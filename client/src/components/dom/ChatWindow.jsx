@@ -25,6 +25,14 @@ export default function ChatWindow() {
     setNewMessage('')
   }
 
+  const handleKeyDown = (e) => {
+    console.log('ok')
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      sendChatMessage()
+    }
+  }
+
   return (
     <div className='fixed bottom-0 right-4 max-w-md rounded-lg shadow-lg flex flex-col z-10 space-y-4 p-4 text-xs bg-custom-bg text-custom-text border border-custom-border font-roboto'>
       <div className='flex-1 overflow-y-auto'>
@@ -41,6 +49,7 @@ export default function ChatWindow() {
         type='text'
         placeholder='Type your message...'
         value={newMessage}
+        onKeyDown={handleKeyDown}
         onChange={(e) => setNewMessage(e.target.value)}
         className={`w-full p-2 rounded-md focus:outline-none bg-custom-bg text-custom-text border border-custom-border disabled:bg-gray-600 disabled:text-gray-400`}
         disabled={isLoading}
