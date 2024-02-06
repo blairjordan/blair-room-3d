@@ -2,7 +2,7 @@ import { Layout } from '@/components/dom/Layout'
 import '@/global.css'
 
 export const metadata = {
-  title: 'My Office 🖥️',
+  title: 'My Office',
   description: 'A 3D interview simulator',
 }
 

@@ -43,16 +43,6 @@ io.on("connection", (socket) => {
 
     socket.emit("receiveMessage", message)
 
-    if (process.env.MODE === "demo") {
-      await new Promise((resolve) => setTimeout(resolve, 3000))
-      socket.emit("receiveMessage", {
-        id: Date.now(),
-        text: "This is a test message generated from the server.",
-        from: "server",
-      })
-      return
-    }
-
     try {
       await assistantThread.ask(message.text)
       const response = await assistantThread.poll()
