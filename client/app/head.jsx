@@ -1,8 +1,7 @@
-const title = 'React Three Next Starter'
+const title = 'Virtual Blair'
 const url = 'https://react-three-next.vercel.app/'
-const description = 'The easiest and fastest way to create a 3D website using React Three Fiber and NextJS'
+const description = 'A 3D interview simulator using ThreeJS, Google Speech-to-Text, and OpenAI (ChatGPT)'
 const author = 'Author'
-const twitter = '@pmndrs'
 
 export default function Head() {
   return (
@@ -34,13 +33,11 @@ export default function Head() {
       <meta property='og:site_name' content={title} />
       <meta property='og:description' content={description} />
 
-      <link rel='apple-touch-icon' href='/icons/apple-touch-icon.png' />
-      <link rel='apple-touch-icon' sizes='16x16' href='/icons/favicon-16x16.png' />
-      <link rel='apple-touch-icon' sizes='32x32' href='/icons/favicon-32x32.png' />
-      <link rel='apple-touch-icon' sizes='180x180' href='/icons/apple-touch-icon.png' />
-      <link rel='manifest' href='/manifest.json' />
-      <link rel='mask-icon' color='#000000' href='/icons/safari-pinned-tab.svg' />
-      <link rel='apple-touch-startup-image' href='/startup.png' />
+      <link rel='icon' type='image/png' href='/favicon-48x48.png' sizes='48x48' />
+      <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+      <link rel='shortcut icon' href='/favicon.ico' />
+      <link rel='apple-touch-icon' sizes='180x180' href='/apple-touch-icon.png' />
+      <link rel='manifest' href='/site.webmanifest' />
 
       {/* Meta Tags for HTML pages on Mobile */}
       {/* <meta name="format-detection" content="telephone=yes"/>
@@ -48,13 +45,6 @@ export default function Head() {
       <meta name='viewport' content='width=device-width, minimum-scale=1, initial-scale=1.0' />
       <meta name='theme-color' content='#000' />
       <link rel='shortcut icon' href='/icons/apple-touch-icon.png' />
-
-      {/* 
-      Twitter Summary card
-        documentation: https://dev.twitter.com/cards/getting-started
-        Be sure validate your Twitter card markup on the documentation site. */}
-      <meta name='twitter:card' content='summary' />
-      <meta name='twitter:site' content={twitter} />
     </>
   )
 }

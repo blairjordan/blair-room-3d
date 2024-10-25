@@ -66,6 +66,25 @@ export default function ChatWindow() {
       >
         {isLoading ? 'Waiting for reply...' : 'Send'}
       </button>
+      <div className='text-right mt-2'>
+        <a
+          href='https://github.com/blairjordan/blair-room-3d'
+          target='_blank'
+          rel='noopener noreferrer'
+          className='text-xs text-gray-500 hover:text-gray-700 hover:underline mr-2'
+        >
+          source
+        </a>
+        <span className='text-gray-500'>|</span>
+        <a
+          href='https://devmode.digital'
+          target='_blank'
+          rel='noopener noreferrer'
+          className='text-xs text-gray-500 hover:text-gray-700 hover:underline ml-2'
+        >
+          devmode.digital
+        </a>
+      </div>
     </div>
   )
 }
