@@ -27,12 +27,25 @@ app.get("/healthz", (req, res) => {
   })
 })
 
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
   console.log("🔌 User connected")
+
   const assistantThread = new AssistantThread(
     process.env.OPEANAI_API_KEY,
     process.env.OPEANAI_ASSISTANT_ID
   )
+
+  try {
+    await assistantThread.initializeThread()
+  } catch (error) {
+    console.error("Error initializing thread:", error)
+    socket.emit("receiveMessage", {
+      id: Date.now(),
+      error: "Failed to initialize assistant thread. Please try again later.",
+      from: "server",
+    })
+    return
+  }
 
   socket.on("disconnect", () => {
     console.log("🛑 User disconnected")
@@ -41,13 +54,25 @@ io.on("connection", (socket) => {
   socket.on("sendMessage", async (message) => {
     console.info("🗨️ Message received: ", message)
 
-    socket.emit("receiveMessage", message)
+    const text = message?.text
+
+    if (!text || typeof text !== "string") {
+      console.error(
+        "Invalid message format. 'text' must be a non-empty string."
+      )
+      socket.emit("receiveMessage", {
+        id: Date.now(),
+        error: "Invalid message format. 'text' must be a non-empty string.",
+        from: "server",
+      })
+
+      return
+    }
 
     try {
-      await assistantThread.ask(message.text)
-      const response = await assistantThread.poll()
+      const response = await assistantThread.ask(text)
+      console.info("⬅️ Assistant response: ", response)
 
-      console.info("⬅️ Response: ", response)
       socket.emit("receiveMessage", {
         id: Date.now(),
         text: response,
@@ -66,12 +91,12 @@ io.on("connection", (socket) => {
         })
       }
     } catch (error) {
+      console.error("Error handling message:", error)
       socket.emit("receiveMessage", {
         id: Date.now(),
-        error: "An error occured. Please try again later.",
+        error: "An error occurred. Please try again later.",
         from: "server",
       })
-      console.error(error)
     }
   })
 })
